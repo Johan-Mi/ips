@@ -12,19 +12,19 @@ pub fn main() !void {
     const me = args.next() orelse return error.NoPatchProvided;
 
     const patch_path = args.next() orelse {
-        usage(me);
+        try usage(me);
         return error.NoPatchProvided;
     };
     const source_path = args.next() orelse {
-        usage(me);
+        try usage(me);
         return error.NoSourceProvided;
     };
     const dest_path = args.next() orelse {
-        usage(me);
+        try usage(me);
         return error.NoDestinationProvided;
     };
     if (args.next()) |_| {
-        usage(me);
+        try usage(me);
         return error.TooManyCommandLineArguments;
     }
 
@@ -40,6 +40,6 @@ pub fn main() !void {
     try dest_file.writeAll(source);
 }
 
-fn usage(me: []const u8) void {
-    std.log.info("usage: {s} PATCH.ips SOURCE DEST", .{me});
+fn usage(me: []const u8) !void {
+    try std.io.getStdErr().writer().print("usage: {s} PATCH.ips SOURCE DEST\n", .{me});
 }
